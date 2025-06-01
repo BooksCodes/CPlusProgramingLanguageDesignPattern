@@ -1,0 +1,179 @@
+#include <iostream>
+using namespace std;
+
+//此部分代码是书本第二章第19-27页的代码，
+
+/// <summary>
+/// 角色父类
+/// </summary>
+class Fighter
+{
+public:
+	/// <summary>
+	/// 构造函数
+	/// </summary>
+	/// <param name="life">角色生命值</param>
+	/// <param name="magic">角色魔法值</param>
+	/// <param name="attack">角色攻击力</param>
+	Fighter(int life, int magic, int attack) :m_life(life), m_magic(magic), m_attack(attack) {};
+	virtual ~Fighter() {}//作为父类时析构函数应该为虚函数
+
+	/// <summary>
+	/// 技能“燃烧”
+	/// </summary>
+	void JN_Burn()
+	{
+		if (canUseJN() == false)
+		{
+			return;
+		}
+		effect_enemy();
+		effect_self();
+		play_effect();
+
+	}
+
+protected:
+	//角色属性
+	int m_life;		//生命值
+	int m_magic;	//魔法值
+	int m_attack;	//攻击力
+
+private:
+	/// <summary>
+	/// 能否使用“燃烧”技能
+	/// </summary>
+	/// <returns></returns>
+	virtual bool canUseJN() = 0;
+	/// <summary>
+	/// “燃烧”技能对敌人产生的影响
+	/// </summary>
+	virtual void effect_enemy() {};
+	/// <summary>
+	/// “燃烧”技能对自身产生的影响
+	/// </summary>
+	virtual void effect_self() {};
+	/// <summary>
+	/// 播放“燃烧”技能特效
+	/// </summary>
+	void play_effect()
+	{
+		cout << "播放技能“燃烧”的技能特效给玩家看" << endl;
+		//所有角色播放的技能特效都相同，因此不同写成一个虚函数并在子类中实现技能特效的播放。
+	}
+
+};
+
+/// <summary>
+/// “战士”类，父类为Fighter
+/// </summary>
+class F_Warrior :public Fighter
+{
+public:
+	/// <summary>
+	/// 构造函数
+	/// </summary>
+	/// <param name="life">战士的生命值</param>
+	/// <param name="magic">战士的魔法值</param>
+	/// <param name="attack">战士的攻击力</param>
+	F_Warrior(int life, int magic, int attack) :Fighter(life, magic, attack) {}
+
+private:
+	/// <summary>
+	/// 判断能否使用“燃烧”技能
+	/// </summary>
+	/// <returns>如果战士生命值小于300点，则不能使用“燃烧”技能，否则，可以用。</returns>
+	virtual bool canUseJN()
+	{
+		if (m_life < 300)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	/// <summary>
+	/// “燃烧”技能对敌人产生的影响
+	/// </summary>
+	virtual void effect_enemy()
+	{
+		cout << "战士主角 ：让所有敌人每人失去500点生命值，相关逻辑代码略……" << endl;
+
+	}
+	/// <summary>
+	/// “燃烧”技能对自身产生的影响
+	/// </summary>
+	virtual void effect_self()
+	{
+		cout << "战士主角 ：自身失去300点生命值，相关逻辑代码略……" << endl;
+		m_life -= 300;
+	}
+
+};
+// <summary>
+/// “法师”类，父类为Fighter
+/// </summary>
+class F_Mage :public Fighter
+{
+public:
+	/// <summary>
+	/// 构造函数
+	/// </summary>
+	/// <param name="life">法师的生命值</param>
+	/// <param name="magic">法师的魔法值</param>
+	/// <param name="attack">法师的攻击力</param>
+	F_Mage(int life, int magic, int attack) :Fighter(life, magic, attack) {}
+
+private:
+	/// <summary>
+	/// 判断能否使用“燃烧”技能
+	/// </summary>
+	/// <returns>如果法师魔法值小于300点，则不能使用“燃烧”技能，否则，可以用。</returns>
+	virtual bool canUseJN()
+	{
+		if (m_magic < 100)
+		{
+			return false;
+		}
+		return true;
+	}
+	/// <summary>
+	/// “燃烧”技能对敌人产生的影响
+	/// </summary>
+	virtual void effect_enemy()
+	{
+		cout << "法师主角 ：让所有敌人每人失去650点生命值，相关逻辑代码略……" << endl;
+
+	}
+	/// <summary>
+	/// “燃烧”技能对自身产生的影响
+	/// </summary>
+	virtual void effect_self()
+	{
+		cout << "法师主角 ：自身失去100点魔法值，相关逻辑代码略……" << endl;
+		m_magic -= 100;
+	}
+
+};
+
+
+int main()
+{
+	////早绑定方式
+	//Fighter prole_war = F_Warrior(1000, 0, 200);
+	//prole_war.JN_Burn();
+	Fighter* prole_war = new F_Warrior(1000, 0, 300);
+	prole_war->JN_Burn();
+	cout << "----------------" << endl;
+	//晚绑定方式
+	Fighter* prole_mage = new F_Mage(800, 200, 300);
+	prole_mage->JN_Burn();
+
+	cout << "----------------\n创建一个生命值低于300的战士进行测试，看其能否释放“燃烧”技能：" << endl;
+	Fighter* prole_war2 = new F_Warrior(100, 0, 300);
+	prole_war2->JN_Burn();
+
+	//释放资源
+	//delete prole_war;
+	delete prole_mage;
+}
