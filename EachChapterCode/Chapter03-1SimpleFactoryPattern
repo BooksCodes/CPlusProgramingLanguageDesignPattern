@@ -1,0 +1,119 @@
+#include <iostream>
+using namespace std;
+
+/// <summary>
+/// 怪物父类
+/// </summary>
+class Monster
+{
+public :
+	//构造函数
+	Monster(int life, int magic, int attack) :m_life(life), m_magic(magic), m_attack(attack) {};
+	virtual ~Monster() {};//作父类时析构函数应该为虚函数
+
+protected:
+	//怪物属性
+	int m_life;		//生命值
+	int m_magic;	//魔法值
+	int m_attack;	//攻击力
+};
+
+/// <summary>
+/// 亡灵类怪物
+/// </summary>
+class M_Undead :public Monster
+{
+public:
+	//构造函数
+	M_Undead(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只亡灵怪物来到了这个世界" << endl;
+	}
+	//其他代码 略……
+};
+
+/// <summary>
+/// 元素类怪物
+/// </summary>
+class M_Element :public Monster
+{
+public:
+	//构造函数
+	M_Element(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只元素怪物来到了这个世界" << endl;
+	}
+	//其他代码 略……
+};
+
+/// <summary>
+/// 机械类怪物
+/// </summary>
+class M_Mechanic :public Monster
+{
+public:
+	//构造函数
+	M_Mechanic(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只机械怪物来到了这个世界" << endl;
+	}
+	//其他代码 略……
+};
+
+/// <summary>
+/// 怪物工厂类，用于根据传入的字符串类型创建不同的怪物对象
+/// </summary>
+class MonsterFactory
+{
+public:
+	/// <summary>
+	/// 创建怪物的工厂方法
+	/// </summary>
+	/// <param name="strmontype">怪物的类型。字符串类型，例如 "udd" 表示亡灵怪，"elm" 表示元素怪，"mec" 表示机械怪。</param>
+	/// <returns>返回指向创建的怪物对象的指针（Monster*），如果类型不匹配则返回 nullptr。</returns>
+	Monster* createMonster(string strmontype)
+	{
+		// 初始化返回的怪物指针为空
+		Monster* prtnobj = nullptr;
+
+		// 判断怪物类型并创建相应的对象
+		if (strmontype == "udd")  // "udd" 表示亡灵怪
+		{
+			prtnobj = new M_Undead(300, 50, 80);  // 构造函数中传入生命值、魔法值、攻击力
+		}
+		else if (strmontype == "elm")  // "elm" 表示元素怪
+		{
+			prtnobj = new M_Element(200, 80, 100);
+		}
+		else if (strmontype == "mec")  // "mec" 表示机械怪
+		{
+			prtnobj = new M_Mechanic(400, 0, 110);
+		}
+
+		// 返回创建的怪物对象指针
+		return prtnobj;
+	}
+};
+
+
+
+int main()
+{
+	////直接创建对象
+	//Monster* pM1 = new M_Undead(300, 50, 80);
+	//Monster* pM2 = new M_Element(200, 80, 100);
+	//Monster* pM3 = new M_Mechanic(400, 0, 110);
+	////释放资源
+	//delete pM1;
+	//delete pM2;
+	//delete pM3;
+
+	//使用怪物工厂创建对象
+	MonsterFactory facobj;
+	Monster* pM1 = facobj.createMonster("udd");
+	Monster* pM2 = facobj.createMonster("elm");
+	Monster* pM3 = facobj.createMonster("mec");
+	delete pM1;
+	delete pM2;
+	delete pM3;
+}
