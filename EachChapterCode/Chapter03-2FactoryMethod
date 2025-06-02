@@ -2,6 +2,7 @@
 using namespace std;
 
 //工厂方法模式
+//此部分代码是书本第三章（P34-37）代码
 
 /// <summary>
 /// 怪物父类
