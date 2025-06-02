@@ -1,0 +1,216 @@
+#include <iostream>
+using namespace std;
+
+//抽象工厂模式
+//此部分代码是书本第三章（P39-43）代码
+
+/// <summary>
+/// 怪物父类
+/// </summary>
+class Monster
+{
+public:
+	//构造函数
+	Monster(int life, int magic, int attack) :m_life(life), m_magic(magic), m_attack(attack) {};
+	virtual ~Monster() {};//作父类时析构函数应该为虚函数
+
+protected:
+	//怪物属性
+	int m_life;		//生命值
+	int m_magic;	//魔法值
+	int m_attack;	//攻击力
+};
+
+/// <summary>
+/// 沼泽亡灵类怪物
+/// </summary>
+class M_Undead_Swamp :public Monster
+{
+public:
+	M_Undead_Swamp(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只沼泽的亡灵类怪物来到了这个世界" << endl;
+	}
+};
+/// <summary>
+/// 沼泽元素类怪物
+/// </summary>
+class M_Element_Swamp :public Monster
+{
+public:
+	M_Element_Swamp(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只沼泽的元素类怪物来到了这个世界" << endl;
+	}
+};
+/// <summary>
+/// 沼泽机械类怪物
+/// </summary>
+class M_Mechanic_Swamp :public Monster
+{
+public:
+	M_Mechanic_Swamp(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只沼泽的机械类怪物来到了这个世界" << endl;
+	}
+};
+/// <summary>
+/// 山脉亡灵类怪物
+/// </summary>
+class M_Undead_Mountain :public Monster
+{
+public:
+	M_Undead_Mountain(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只山脉的亡灵类怪物来到了这个世界" << endl;
+	}
+};
+/// <summary>
+/// 山脉元素类怪物
+/// </summary>
+class M_Element_Mountain :public Monster
+{
+public:
+	M_Element_Mountain(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只山脉的元素类怪物来到了这个世界" << endl;
+	}
+};
+/// <summary>
+/// 山脉机械类怪物
+/// </summary>
+class M_Mechanic_Mountain :public Monster
+{
+public:
+	M_Mechanic_Mountain(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只山脉的机械类怪物来到了这个世界" << endl;
+	}
+};
+/// <summary>
+/// 城镇亡灵类怪物
+/// </summary>
+class M_Undead_Town :public Monster
+{
+public:
+	M_Undead_Town(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只城镇的亡灵类怪物来到了这个世界" << endl;
+	}
+};
+/// <summary>
+/// 城镇元素类怪物
+/// </summary>
+class M_Element_Town :public Monster
+{
+public:
+	M_Element_Town(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只城镇的元素类怪物来到了这个世界" << endl;
+	}
+};
+/// <summary>
+/// 城镇机械类怪物
+/// </summary>
+class M_Mechanic_Town :public Monster
+{
+public:
+	M_Mechanic_Town(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只城镇的机械类怪物来到了这个世界" << endl;
+	}
+};
+
+/// <summary>
+/// 所有工厂类的父类
+/// </summary>
+class M_ParFactory
+{
+public:
+	virtual Monster* createMonster_Undead() = 0;
+	virtual Monster* createMonster_Element() = 0;
+	virtual Monster* createMonster_Mechanic() = 0;
+	virtual ~M_ParFactory() {};
+};
+
+/// <summary>
+/// 沼泽地区的工厂
+/// </summary>
+class M_Factory_Swamp :public M_ParFactory
+{
+public:
+	virtual Monster* createMonster_Undead()
+	{
+		return new M_Undead_Swamp(300, 50, 120);
+	}
+	virtual Monster* createMonster_Element()
+	{
+		return new M_Element_Swamp(200, 80, 110);
+	}
+	virtual Monster* createMonster_Mechanic()
+	{
+		return new M_Mechanic_Swamp(400, 0, 90);
+	}
+};
+/// <summary>
+/// 山脉地区的工厂
+/// </summary>
+class M_Factory_Mountain :public M_ParFactory
+{
+public:
+	virtual Monster* createMonster_Undead()
+	{
+		return new M_Undead_Mountain(300, 50, 120);
+	}
+	virtual Monster* createMonster_Element()
+	{
+		return new M_Element_Mountain(200, 80, 110);
+	}
+	virtual Monster* createMonster_Mechanic()
+	{
+		return new M_Mechanic_Mountain(400, 0, 90);
+	}
+};
+/// <summary>
+/// 沼泽地区的工厂
+/// </summary>
+class M_Factory_Town :public M_ParFactory
+{
+public:
+	virtual Monster* createMonster_Undead()
+	{
+		return new M_Undead_Town(300, 50, 120);
+	}
+	virtual Monster* createMonster_Element()
+	{
+		return new M_Element_Town(200, 80, 110);
+	}
+	virtual Monster* createMonster_Mechanic()
+	{
+		return new M_Mechanic_Town(400, 0, 90);
+	}
+};
+
+
+
+int main()
+{
+	//多态工厂，山脉地区的工厂
+	M_ParFactory* p_mou_fy = new M_Factory_Mountain();
+	//创建山脉地区的元素类怪物
+	Monster* pM1 = p_mou_fy->createMonster_Element();
+	//多态工厂，城镇地区的工厂
+	M_ParFactory* p_twn_fy = new M_Factory_Town();
+	//创建城镇地区的亡灵类怪物
+	Monster* pM2 = p_twn_fy->createMonster_Undead();
+	//创建城镇地区的机械类怪物
+	Monster* pM3 = p_twn_fy->createMonster_Mechanic();
+	//释放资源
+	//释放工厂
+	delete p_mou_fy;
+	delete p_twn_fy;
+	//释放怪物
+	delete pM1;
+	delete pM2;
+	delete pM3;
+}
