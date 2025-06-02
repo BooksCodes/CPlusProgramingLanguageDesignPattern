@@ -1,0 +1,166 @@
+#include <iostream>
+using namespace std;
+
+//工厂方法模式
+
+/// <summary>
+/// 怪物父类
+/// </summary>
+class Monster
+{
+public:
+	//构造函数
+	Monster(int life, int magic, int attack) :m_life(life), m_magic(magic), m_attack(attack) {};
+	virtual ~Monster() {};//作父类时析构函数应该为虚函数
+
+protected:
+	//怪物属性
+	int m_life;		//生命值
+	int m_magic;	//魔法值
+	int m_attack;	//攻击力
+};
+
+/// <summary>
+/// 亡灵类怪物
+/// </summary>
+class M_Undead :public Monster
+{
+public:
+	//构造函数
+	M_Undead(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只亡灵怪物来到了这个世界\t生命值：" << life << "\t魔法值：" << magic << "\t攻击力：" << attack << endl;
+	}
+	//其他代码 略……
+};
+
+/// <summary>
+/// 元素类怪物
+/// </summary>
+class M_Element :public Monster
+{
+public:
+	//构造函数
+	M_Element(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只元素怪物来到了这个世界\t生命值：" << life << "\t魔法值：" << magic << "\t攻击力：" << attack << endl;
+	}
+	//其他代码 略……
+};
+
+/// <summary>
+/// 机械类怪物
+/// </summary>
+class M_Mechanic :public Monster
+{
+public:
+	//构造函数
+	M_Mechanic(int life, int magic, int attack) :Monster(life, magic, attack)
+	{
+		cout << "一只机械怪物来到了这个世界\t生命值：" << life<<"\t魔法值：" << magic << "\t攻击力：" << attack << endl;
+	}
+	//其他代码 略……
+};
+
+/// <summary>
+/// 所有工厂类的父类
+/// </summary>
+class M_ParFactory
+{
+public:
+	virtual Monster* createMonster() = 0;	//具体的实现在子类中进行
+	virtual ~M_ParFactory() {};				//作父类时析构函数应该为虚函数
+};
+
+/// <summary>
+/// M_Undead类型的怪物工厂，生产M_Undead类型的怪物
+/// </summary>
+class M_UndeadFactory :public M_ParFactory
+{
+public:
+	virtual Monster* createMonster()
+	{
+		return new M_Undead(300, 50, 80);	//创建亡灵类怪物
+	}
+};
+/// <summary>
+/// M_Element类型的怪物工厂，生产M_Element类型的怪物
+/// </summary>
+class M_ElementFactory :public M_ParFactory
+{
+public:
+	virtual Monster* createMonster()
+	{
+		return new M_Element(200, 80, 100);	//创建元素类怪物
+	}
+};
+/// <summary>
+/// M_Mechanic类型的怪物工厂，生产M_Mechanic类型的怪物
+/// </summary>
+class M_MechanicFactory :public M_ParFactory
+{
+public:
+	virtual Monster* createMonster()
+	{
+		return new M_Mechanic(400, 0, 110);	//创建机械类怪物
+	}
+};
+/// <summary>
+/// 全局函数，用于创建怪物对象
+/// </summary>
+/// <param name="factory">形参的类型是工厂父类类型的指针</param>
+/// <returns>返回类型是怪物父类类型的指针</returns>
+Monster* Gbl_CreateMonster(M_ParFactory* factory)
+{
+	return factory->createMonster();
+}
+
+template <typename T>
+class M_ChildFactory:public M_ParFactory
+{
+public:
+	//书中37页原来的代码：
+	virtual Monster* createMonster()
+	{
+		////如果需要不同的值，则可以考虑通过createMonster的形参将值传递进来。
+		return new T(300, 50, 80);
+	}
+	//virtual Monster* createMonster(int life, int magic, int attack)
+	//{
+	//	return new T(life, magic, attack);
+	//}
+};
+int main()
+{
+	//多态工厂，注意指针类型
+	M_ParFactory* p_ud_fy = new M_UndeadFactory();
+	//产生了一只亡灵类怪物，也是多态，注意返回类型，
+	//当然也可以直接写成Monster* pM1 = p_ud_fy->createMonster();
+	Monster* pM1 = Gbl_CreateMonster(p_ud_fy);
+
+	M_ParFactory* p_elm_fy = new M_ElementFactory();
+	//产生了一只元素类怪物
+	Monster* pM2 = Gbl_CreateMonster(p_elm_fy);
+
+	M_ParFactory* p_mec_fy = new M_MechanicFactory();
+	//产生了一只机械类怪物
+	Monster* pM3 = Gbl_CreateMonster(p_mec_fy);
+
+	M_ChildFactory<M_Mechanic> myFactory;
+	Monster* pM10 = myFactory.createMonster();
+
+	delete pM10;
+
+
+
+
+	//释放资源
+	//释放工厂
+	delete p_ud_fy;
+	delete p_elm_fy;
+	delete p_mec_fy;
+	//释放怪物
+	delete pM1;
+	delete pM2;
+	delete pM3;
+}
