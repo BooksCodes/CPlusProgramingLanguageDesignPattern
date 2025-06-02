@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 
+//模板方法模式
 //此部分代码是书本第二章第19-27页的代码，
 
 /// <summary>
