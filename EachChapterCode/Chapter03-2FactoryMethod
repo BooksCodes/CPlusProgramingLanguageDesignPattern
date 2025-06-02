@@ -70,7 +70,7 @@ class M_ParFactory
 {
 public:
 	virtual Monster* createMonster() = 0;	//具体的实现在子类中进行
-	virtual ~M_ParFactory() {};				//作父类时析构函数应该为虚函数
+	virtual ~M_ParFactory() {};		//作父类时析构函数应该为虚函数
 };
 
 /// <summary>
@@ -81,7 +81,9 @@ class M_UndeadFactory :public M_ParFactory
 public:
 	virtual Monster* createMonster()
 	{
-		return new M_Undead(300, 50, 80);	//创建亡灵类怪物
+		Monster* ptmp= new M_Undead(300, 50, 80);	//创建亡灵类怪物
+		//这里可以增加一些其他的业务代码
+		return ptmp;
 	}
 };
 /// <summary>
@@ -92,7 +94,9 @@ class M_ElementFactory :public M_ParFactory
 public:
 	virtual Monster* createMonster()
 	{
-		return new M_Element(200, 80, 100);	//创建元素类怪物
+		Monster* ptmp = new M_Element(200, 80, 100);	//创建亡灵类怪物
+		//这里可以增加一些其他的业务代码
+		return ptmp;
 	}
 };
 /// <summary>
@@ -103,9 +107,12 @@ class M_MechanicFactory :public M_ParFactory
 public:
 	virtual Monster* createMonster()
 	{
-		return new M_Mechanic(400, 0, 110);	//创建机械类怪物
+		Monster* ptmp = new M_Mechanic(400, 0, 110);	//创建亡灵类怪物
+		//这里可以增加一些其他的业务代码
+		return ptmp;
 	}
 };
+
 /// <summary>
 /// 全局函数，用于创建怪物对象
 /// </summary>
