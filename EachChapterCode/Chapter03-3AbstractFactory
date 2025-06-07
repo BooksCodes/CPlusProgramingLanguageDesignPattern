@@ -127,6 +127,7 @@ public:
 class M_ParFactory
 {
 public:
+	//声明函数，但不实现，具体实现在各个具体的工厂中。
 	virtual Monster* createMonster_Undead() = 0;
 	virtual Monster* createMonster_Element() = 0;
 	virtual Monster* createMonster_Mechanic() = 0;
